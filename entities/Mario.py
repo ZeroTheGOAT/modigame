@@ -1,4 +1,5 @@
 import pygame
+import cv2
 import sys
 
 from classes.Animation import Animation
@@ -308,43 +309,17 @@ class Mario(EntityBase):
         # Stop music
         self.sound.music_channel.stop()
         
-        # Play end music on loop
-        self.sound.music_channel.play(self.sound.end_music, loops=-1)
+        # Show Win Screen First
+        font = pygame.font.Font(None, 74)
+        text = font.render("You Won!", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(320, 240))
         
-        # Show Win Screen
-        font_large = pygame.font.Font(None, 74)
-        font_small = pygame.font.Font(None, 36)
-        
-        text_win = font_large.render("You Won!", True, (255, 215, 0))  # Gold color
-        text_congrats = font_small.render("Congratulations!", True, (255, 255, 255))
-        text_restart = font_small.render("Press any key to restart", True, (200, 200, 200))
-        
-        text_win_rect = text_win.get_rect(center=(320, 180))
-        text_congrats_rect = text_congrats.get_rect(center=(320, 240))
-        text_restart_rect = text_restart.get_rect(center=(320, 300))
-        
-        # Show win screen until key press
+        # Show text for 3 seconds or until key press
+        start_time = pygame.time.get_ticks()
         waiting = True
-        clock = pygame.time.Clock()
-        
         while waiting:
-            # Create gradient background effect
-            for y in range(480):
-                color_value = int(50 + (y / 480) * 50)  # Gradient from dark to slightly lighter
-                pygame.draw.line(self.screen, (0, 0, color_value), (0, y), (640, y))
-            
-            # Draw text with shadow effect
-            shadow_offset = 3
-            # Shadows
-            shadow_win = font_large.render("You Won!", True, (50, 50, 50))
-            shadow_congrats = font_small.render("Congratulations!", True, (50, 50, 50))
-            self.screen.blit(shadow_win, (text_win_rect.x + shadow_offset, text_win_rect.y + shadow_offset))
-            self.screen.blit(shadow_congrats, (text_congrats_rect.x + shadow_offset, text_congrats_rect.y + shadow_offset))
-            
-            # Main text
-            self.screen.blit(text_win, text_win_rect)
-            self.screen.blit(text_congrats, text_congrats_rect)
-            self.screen.blit(text_restart, text_restart_rect)
+            self.screen.fill((0, 0, 0))
+            self.screen.blit(text, text_rect)
             
             if self.display_surface:
                 scaled = pygame.transform.scale(self.screen, self.display_surface.get_size())
@@ -352,15 +327,68 @@ class Mario(EntityBase):
                 
             pygame.display.update()
             
+            if pygame.time.get_ticks() - start_time > 3000:
+                waiting = False
+                
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.sound.music_channel.stop()
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN or event.type == pygame.FINGERDOWN:
+                if event.type == pygame.KEYDOWN:
                     waiting = False
-                    self.sound.music_channel.stop()
+
+        # Play video
+        cap = cv2.VideoCapture("./img/win_video.mp4")
+        if not cap.isOpened():
+            print("Error opening video file")
+        else:
+            # Play end music on loop
+            self.sound.music_channel.play(self.sound.end_music, loops=-1)
             
-            clock.tick(60)
+            clock = pygame.time.Clock()
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if ret:
+                    # Convert frame to pygame surface
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    
+                    # Scale to fit screen while maintaining aspect ratio
+                    h, w = frame.shape[:2]
+                    screen_w, screen_h = 640, 480
+                    scale = min(screen_w/w, screen_h/h)
+                    new_w, new_h = int(w * scale), int(h * scale)
+                    frame = cv2.resize(frame, (new_w, new_h))
+                    
+                    surf = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
+                    
+                    # Center the video
+                    x_pos = (screen_w - new_w) // 2
+                    y_pos = (screen_h - new_h) // 2
+                    
+                    self.screen.fill((0, 0, 0))
+                    self.screen.blit(surf, (x_pos, y_pos))
+                    
+                    if self.display_surface:
+                        scaled = pygame.transform.scale(self.screen, self.display_surface.get_size())
+                        self.display_surface.blit(scaled, (0, 0))
+                        
+                    pygame.display.update()
+                    
+                    # Handle events to allow exit
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            cap.release()
+                            self.sound.music_channel.stop()
+                            pygame.quit()
+                            sys.exit()
+                        if event.type == pygame.KEYDOWN: # Allow skipping video
+                             cap.release()
+                             break
+                    
+                    clock.tick(30) # Limit FPS
+                else:
+                    break
+            cap.release()
+            self.sound.music_channel.stop()
         
         self.restart = True
