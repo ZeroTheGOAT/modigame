@@ -19,14 +19,14 @@ class Pause:
             20, 150, 2, colorkey=[255, 0, 220], ignoreTileSize=True
         )
 
-    def update(self):
+    def update(self, events):
         self.screen.blit(self.pause_srfc, (0, 0))
         self.dashboard.drawText("PAUSED", 120, 160, 68)
         self.dashboard.drawText("CONTINUE", 150, 280, 32)
         self.dashboard.drawText("BACK TO MENU", 150, 320, 32)
         self.drawDot()
-        pygame.display.update()
-        self.checkInput()
+        # pygame.display.update() removed
+        self.checkInput(events)
 
     def drawDot(self):
         if self.state == 0:
@@ -36,8 +36,7 @@ class Pause:
             self.screen.blit(self.dot, (100, 315))
             self.screen.blit(self.gray_dot, (100, 275))
 
-    def checkInput(self):
-        events = pygame.event.get()
+    def checkInput(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()

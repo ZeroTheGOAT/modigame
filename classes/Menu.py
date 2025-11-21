@@ -39,8 +39,8 @@ class Menu:
         )
         self.loadSettings("./settings.json")
 
-    def update(self):
-        self.checkInput()
+    def update(self, events):
+        self.checkInput(events)
         if self.inChoosingLevel:
             return
 
@@ -188,8 +188,7 @@ class Menu:
         self.levelCount = len(res)
         return res
 
-    def checkInput(self):
-        events = pygame.event.get()
+    def checkInput(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -262,4 +261,4 @@ class Menu:
                             self.saveSettings("./settings.json")
                         elif self.state == 2:
                             self.inSettings = False
-        pygame.display.update()
+        # pygame.display.update() removed to handle scaling in main loop

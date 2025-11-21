@@ -12,7 +12,7 @@ class EntityBase(object):
         self.alive = True
         self.active = True
         self.bouncing = False
-        self.timeAfterDeath = 5
+        self.timeAfterDeath = 1
         self.timer = 0
         self.type = ""
         self.onGround = False

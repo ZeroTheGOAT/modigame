@@ -9,8 +9,7 @@ class Input:
         self.mouseY = 0
         self.entity = entity
 
-    def checkForInput(self):
-        events = pygame.event.get()
+    def checkForInput(self, events):
         self.checkForKeyboardInput()
         self.checkForMouseInput(events)
         self.checkForQuitAndRestartInputEvents(events)

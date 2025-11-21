@@ -1,33 +1,65 @@
-# Super Mario Implementation in Python
+# Super Mario Web Game
 
-This is inspired by Meth-Meth-Method's [super mario game](https://github.com/meth-meth-method/super-mario/)
+A web-playable Mario game with mobile touch controls, built with Pygame and Pygbag.
 
-## Running
+## Features
 
-* $ pip install -r requirements.txt
-* $ python main.py
+- 🎮 Play in your browser (desktop or mobile)
+- 📱 Mobile touch controls (landscape mode)
+- 🎵 Sound effects and music
+- 🏆 Multiple levels and enemies
 
-## Standalone windows build
+## Play Online
 
-* $ pip install py2exe
-* $ python compile.py py2exe
+Visit the deployed game at: [Your Vercel URL here]
 
 ## Controls
 
-* Left: Move left  
-* Right: Move right  
-* Space: Jump  
-* Shift: Boost   
-* Left/Right Mouseclick: secret   
+### Desktop
+- **Arrow Keys / H,L**: Move left/right
+- **Space / Up / K**: Jump
+- **Shift**: Run faster
+- **ESC / F5**: Pause
 
-## Current state:
-![Alt text](img/pics.png "current state")
+### Mobile
+- **Left Button**: Move left
+- **Right Button**: Move forward/right
+- **Jump Button**: Jump
+- Please rotate your device to landscape mode for the best experience
 
-## Dependencies	
-* pygame	
-* scipy	
+## Local Development
 
-## Contribution
+1. Install dependencies:
+   ```bash
+   pip install pygame pygbag
+   ```
 
-If you have any Improvements/Ideas/Refactors feel free to contact me or make a Pull Request.
-The code needs still alot of refactoring as it is right now, so I appreciate any kind of Contribution.
+2. Run locally:
+   ```bash
+   python main.py
+   ```
+
+3. Build for web:
+   ```bash
+   pygbag my_mario_game
+   ```
+   Then open `localhost:8000` in your browser.
+
+## Deployment to Vercel
+
+1. Build the game:
+   ```bash
+   cd my_mario_game
+   pygbag .
+   ```
+
+2. Deploy to Vercel:
+   ```bash
+   vercel deploy
+   ```
+
+3. Or connect your GitHub repository to Vercel for automatic deployments.
+
+## Credits
+
+Based on Super Mario Bros with custom modifications for web play.

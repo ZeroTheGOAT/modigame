@@ -10,6 +10,7 @@ from entities.Mushroom import RedMushroom
 from entities.Koopa import Koopa
 from entities.CoinBox import CoinBox
 from entities.RandomBox import RandomBox
+from entities.Meloni import Meloni
 
 
 class Level:
@@ -38,6 +39,7 @@ class Level:
             [self.addCoin(x, y) for x, y in data["level"]["entities"]["coin"]]
             [self.addCoinBrick(x, y) for x, y in data["level"]["entities"]["coinBrick"]]
             [self.addRandomBox(x, y, item) for x, y, item in data["level"]["entities"]["RandomBox"]]
+            self.addMeloni(58, 12)
         except:
             # if no entities in Level
             pass
@@ -203,3 +205,6 @@ class Level:
         self.entityList.append(
             RedMushroom(self.screen, self.sprites.spriteCollection, x, y, self, self.sound)
         )
+
+    def addMeloni(self, x, y):
+        self.entityList.append(Meloni(self.screen, self.sprites.spriteCollection, x, y))
