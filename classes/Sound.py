@@ -10,7 +10,7 @@ class Sound:
 
         self.allowSFX = True
 
-        self.soundtrack = mixer.Sound("./sfx/main_theme.ogg")
+        self.soundtrack = mixer.Sound("./sfx/main.mp3")
         self.coin = mixer.Sound("./sfx/coins.mp3") # Override default coin sound
         self.bump = mixer.Sound("./sfx/bump.ogg")
         self.stomp = mixer.Sound("./sfx/stomp.ogg")
